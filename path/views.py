@@ -3,4 +3,7 @@ from django.shortcuts import render
 
 # Create your views here.
 def index(request):
-    return HttpResponse("Hello, world. You're at the path app index.")
+    return HttpResponse("Not implemented yet.", status=501)
+
+def connect_node(request):
+    return HttpResponse("Not implemented yet.", status=501)

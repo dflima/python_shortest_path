@@ -10,7 +10,8 @@ class Graph(models.Model):
         self.graph[source].append(destination)
         self.graph[destination].append(source)
 
-    def BFS(self, source, destination, vertices, predecessor, distance):
+    def BFS(self, source, destination, predecessor, distance):
+        vertices = len(self.graph)
         queue = []
         visited = [False for i in range(vertices)]
 
@@ -36,11 +37,11 @@ class Graph(models.Model):
                         return True
         return False
 
-    def shortest_distance(self, s, destination, vertices):
-        predecessor = [0 for i in range(vertices)]
-        distance = [0 for i in range(vertices)]
+    def shortest_distance(self, s, destination):
+        predecessor = defaultdict(list)
+        distance = defaultdict(list)
 
-        if (BFS(s, destination, vertices, predecessor, distance) == False):
+        if (self.BFS(s, destination, predecessor, distance) == False):
             print("Given source and destination are not connected")
             return ""
 

@@ -2,8 +2,12 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-def index(request):
-    return HttpResponse("Not implemented yet.", status=501)
+from rest_framework.views import APIView
 
-def connect_node(request):
-    return HttpResponse("Not implemented yet.", status=501)
+class PathList(APIView):
+    def get(self, request, format=None):
+        return HttpResponse("Not implemented yet.", status=501)
+
+class ConnectNode(APIView):
+    def post(self, request, format=None):
+        return HttpResponse("Not implemented yet.", status=501)

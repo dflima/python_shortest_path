@@ -3,6 +3,12 @@ from django.db import models
 
 # Create your models here.
 class Graph(models.Model):
+    class Meta:
+        db_table = 'graph'
+
+    node = models.IntegerField()
+    vertices = models.CharField(max_length=200)
+
     def __init__(self):
         self.graph = defaultdict(list)
 

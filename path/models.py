@@ -6,7 +6,7 @@ class Graph(models.Model):
     class Meta:
         db_table = 'graph'
 
-    node = models.IntegerField()
+    node = models.IntegerField(db_index=True)
     vertices = models.CharField(max_length=200)
 
     def __init__(self):

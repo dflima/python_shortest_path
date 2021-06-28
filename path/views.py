@@ -9,6 +9,10 @@ from .models import Graph
 from .admin import BFS
 
 
+def validate_input(from_node, to_node):
+    pattern = re.compile(r'^[A-Z]{1}$')
+    return pattern.match(from_node) or pattern.match(to_node)
+
 class PathList(APIView):
 
     def get(self, request, format=None):
@@ -20,8 +24,7 @@ class PathList(APIView):
         from_node = request.query_params.get('from', '')
         to_node = request.query_params.get('to', '')
 
-        pattern = re.compile(r'^[A-Z]{1}$')
-        if not pattern.match(from_node) or not pattern.match(to_node):
+        if not validate_input(from_node, to_node):
             return Response('Bad request',
                             status=status.HTTP_400_BAD_REQUEST)
 
@@ -41,8 +44,7 @@ class ConnectNode(APIView):
         from_node = request.data.get('from', '')
         to_node = request.data.get('to', '')
 
-        pattern = re.compile(r'^[A-Z]{1}$')
-        if not pattern.match(from_node) or not pattern.match(to_node):
+        if not validate_input(from_node, to_node):
             return Response('Bad request',
                             status=status.HTTP_400_BAD_REQUEST)
 

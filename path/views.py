@@ -6,22 +6,16 @@ from rest_framework import status
 # Create your views here.
 
 from .models import Graph
+from .admin import BFS
 
 
 class PathList(APIView):
 
     def get(self, request, format=None):
-        graph = Graph()
-        graph.add_edge(0, 1)
-        graph.add_edge(0, 3)
-        graph.add_edge(1, 2)
-        graph.add_edge(3, 4)
-        graph.add_edge(3, 7)
-        graph.add_edge(4, 5)
-        graph.add_edge(4, 6)
-        graph.add_edge(4, 7)
-        graph.add_edge(5, 6)
-        graph.add_edge(6, 7)
+        g = Graph()
+        bfs = BFS()
+
+        graph = g.build_graph()
 
         from_node = request.query_params.get('from')
         to_node = request.query_params.get('to')
@@ -35,16 +29,37 @@ class PathList(APIView):
             return Response('Bad request',
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # shortest_distance = graph.shortest_distance(ord(from_node)
-        #         - 65, ord(to_node) - 65)
-        # return Response({'Path': shortest_distance},
-        #                 status=status.HTTP_200_OK)
-        return Response('Not implemented yet.',
-                        status=status.HTTP_501_NOT_IMPLEMENTED)
+        shortest_distance = bfs.shortest_distance(
+            graph=graph,
+            source=ord(from_node)-65,
+            destination=ord(to_node)-65,
+        )
+
+        return Response({'Path': shortest_distance},
+                        status=status.HTTP_200_OK)
 
 
 class ConnectNode(APIView):
 
     def post(self, request, format=None):
-        return Response('Not implemented yet.',
-                        status=status.HTTP_501_NOT_IMPLEMENTED)
+        from_node = request.data.get('from', '')
+        to_node = request.data.get('to', '')
+
+        pattern = re.compile(r'^[A-Z]{1}$')
+        if not pattern.match(from_node) or not pattern.match(to_node):
+            return Response('Bad request',
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        node_from, created = Graph.objects.get_or_create(node=ord(from_node)-65)
+        node_from.update_vertices(to_node)
+
+        node_to, created = Graph.objects.get_or_create(node=ord(to_node)-65)
+        node_to.update_vertices(from_node)
+
+        try:
+            node_from.save()
+            node_to.save()
+        except Exception as e:
+            return Response('Internal Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response('Created', status=status.HTTP_201_CREATED)

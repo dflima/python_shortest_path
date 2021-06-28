@@ -37,8 +37,14 @@ class PathList(APIView):
             return Response('Bad request',
                             status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'Path': shortest_distance},
-                            status=status.HTTP_200_OK)
+            return Response(
+                {'Path': self.format_shortest_distance(shortest_distance)},
+                status=status.HTTP_200_OK
+            )
+
+    def format_shortest_distance(self, shortest_distance):
+        path = list(map(lambda i: chr(i+65), shortest_distance))
+        return ",".join(path)
 
 
 class ConnectNode(APIView):

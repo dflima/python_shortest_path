@@ -51,6 +51,4 @@ class BFS:
             crawl = predecessor[crawl]
 
         path.reverse()
-        str_path = list(map(lambda i: chr(i+65), path))
-
-        return ",".join(str_path)
+        return path

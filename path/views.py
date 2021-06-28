@@ -17,12 +17,8 @@ class PathList(APIView):
 
         graph = g.build_graph()
 
-        from_node = request.query_params.get('from')
-        to_node = request.query_params.get('to')
-
-        if from_node == None or to_node == None:
-            return Response('Bad request',
-                            status=status.HTTP_400_BAD_REQUEST)
+        from_node = request.query_params.get('from', '')
+        to_node = request.query_params.get('to', '')
 
         pattern = re.compile(r'^[A-Z]{1}$')
         if not pattern.match(from_node) or not pattern.match(to_node):
@@ -59,7 +55,7 @@ class ConnectNode(APIView):
         try:
             node_from.save()
             node_to.save()
-        except Exception as e:
+        except:
             return Response('Internal Error', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response('Created', status=status.HTTP_201_CREATED)
